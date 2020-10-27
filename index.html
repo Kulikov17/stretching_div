@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+var cur = null
+
+function hook(e) {
+	e = e || window.event;
+	var el = ( e.srcElement || e.target ).parentNode.parentNode;
+	cur = { 'el': el, 'x': e.clientX - el.offsetWidth, 'y': e.clientY - el.offsetHeight }
+}
+function unhook(e) {
+	if( cur )
+		cur = null;
+}
+function move(e) {
+	if( !cur )
+		return;
+	e = e || window.event;
+  	with( cur )
+  	{
+  		var nx = e.clientX - x;
+  		var ny = e.clientY - y;
+
+  		if( nx < 40 ) nx = 40;
+  		if( ny < 30 ) ny = 30;
+  		
+    	el.style.width = nx + 'px';
+		el.style.height = ny  + 'px';
+	}
+	(e.preventDefault) ? e.preventDefault() : e.returnValue = false;
+}
+
+document.onmouseup = unhook;
+document.onmousemove = move;
+document.ondragstart = function()
+{
+    return false;
+}
+</script>
+
+<style type="text/css">
+  #div_main {
+    z-index:2;
+    position:absolute;
+    top:50px;
+    left:100px;
+    height:12%;
+    width:12%;
+    border:solid 1px #D6D3D6;
+  }
+  #div_img {
+    z-index:1;
+    right:0px;
+    bottom:0px;
+    position:absolute;
+    cursor:se-resize;
+}
+</style>
+
+</head>
+
+<body>
+  <div id="div_main">
+    <div id="div_img">
+      <img src="img\Resize.png" width="15" height="15" alt=">" onmousedown="hook(event)">
+    </div>
+ </div>
+</body>
+</html>
